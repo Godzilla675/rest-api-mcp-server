@@ -1,9 +1,10 @@
 {
   "mcpServers": {
     "rest-api": {
-      "command": "node",
+      "command": "npx",
       "args": [
-        "/absolute/path/to/rest-api-mcp-server/dist/index.js"
+        "-y",
+        "rest-api-mcp-server"
       ]
     }
   }

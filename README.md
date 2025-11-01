@@ -243,12 +243,40 @@ On MacOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
 
 On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 
+**Option 1: Using local installation**
 ```json
 {
   "mcpServers": {
     "rest-api": {
       "command": "node",
       "args": ["/path/to/rest-api-mcp-server/dist/index.js"]
+    }
+  }
+}
+```
+
+**Option 2: Using npx (recommended after npm publish)**
+```json
+{
+  "mcpServers": {
+    "rest-api": {
+      "command": "npx",
+      "args": ["-y", "rest-api-mcp-server"]
+    }
+  }
+}
+```
+
+**Option 3: Using global installation**
+```bash
+npm install -g rest-api-mcp-server
+```
+
+```json
+{
+  "mcpServers": {
+    "rest-api": {
+      "command": "rest-api-mcp-server"
     }
   }
 }

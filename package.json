@@ -14,9 +14,17 @@
     "dev": "tsx src/index.ts",
     "test": "node test/test-server.js"
   },
-  "keywords": ["mcp", "rest-api", "api", "http", "model-context-protocol"],
-  "author": "",
+  "keywords": ["mcp", "rest-api", "api", "http", "model-context-protocol", "rest", "axios", "claude", "llm"],
+  "author": "Godzilla675",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Godzilla675/rest-api-mcp-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Godzilla675/rest-api-mcp-server/issues"
+  },
+  "homepage": "https://github.com/Godzilla675/rest-api-mcp-server#readme",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.20.2",
     "axios": "^1.13.1",

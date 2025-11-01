@@ -137,7 +137,7 @@ const server = new Server(
 const tools: Tool[] = [
   {
     name: "rest_api_get",
-    description: "Make a GET request to any REST API. Supports authentication (API key, Bearer token, Basic auth), custom headers, and query parameters.",
+    description: "Make a GET request to any REST API. IMPORTANT: Before using this tool, read the API documentation first to understand endpoints, required parameters, authentication methods, and response formats. Supports authentication (API key, Bearer token, Basic auth), custom headers, and query parameters.",
     inputSchema: {
       type: "object",
       properties: {
@@ -193,7 +193,7 @@ const tools: Tool[] = [
   },
   {
     name: "rest_api_post",
-    description: "Make a POST request to any REST API with request body. Supports authentication, custom headers, and query parameters.",
+    description: "Make a POST request to any REST API with request body. IMPORTANT: Before using this tool, read the API documentation first to understand endpoints, required body structure, authentication methods, and response formats. Supports authentication, custom headers, and query parameters.",
     inputSchema: {
       type: "object",
       properties: {
@@ -257,7 +257,7 @@ const tools: Tool[] = [
   },
   {
     name: "rest_api_put",
-    description: "Make a PUT request to any REST API to update a resource. Supports authentication, custom headers, and request body.",
+    description: "Make a PUT request to any REST API to update a resource. IMPORTANT: Before using this tool, read the API documentation first to understand endpoints, required body structure, authentication methods, and response formats. Supports authentication, custom headers, and request body.",
     inputSchema: {
       type: "object",
       properties: {
@@ -321,7 +321,7 @@ const tools: Tool[] = [
   },
   {
     name: "rest_api_patch",
-    description: "Make a PATCH request to any REST API to partially update a resource. Supports authentication, custom headers, and request body.",
+    description: "Make a PATCH request to any REST API to partially update a resource. IMPORTANT: Before using this tool, read the API documentation first to understand endpoints, required body structure, authentication methods, and response formats. Supports authentication, custom headers, and request body.",
     inputSchema: {
       type: "object",
       properties: {
@@ -385,7 +385,7 @@ const tools: Tool[] = [
   },
   {
     name: "rest_api_delete",
-    description: "Make a DELETE request to any REST API to delete a resource. Supports authentication, custom headers, and optional request body.",
+    description: "Make a DELETE request to any REST API to delete a resource. IMPORTANT: Before using this tool, read the API documentation first to understand endpoints, authentication methods, and any required parameters. Supports authentication, custom headers, and optional request body.",
     inputSchema: {
       type: "object",
       properties: {
