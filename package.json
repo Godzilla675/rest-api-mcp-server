@@ -1,0 +1,30 @@
+{
+  "name": "rest-api-mcp-server",
+  "version": "1.0.0",
+  "description": "A Model Context Protocol (MCP) server for making REST API requests with authentication support",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "rest-api-mcp-server": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "test": "node test/test-server.js"
+  },
+  "keywords": ["mcp", "rest-api", "api", "http", "model-context-protocol"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.20.2",
+    "axios": "^1.13.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^24.9.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}
