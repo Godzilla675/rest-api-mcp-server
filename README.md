@@ -5,7 +5,10 @@ A powerful Model Context Protocol (MCP) server that enables AI models to interac
 ## Features
 
 - ✅ **All HTTP Methods**: Support for GET, POST, PUT, PATCH, and DELETE requests
-- 🔐 **Multiple Authentication Types**:
+- � **File Uploads**: Upload images, documents, and any files using multipart/form-data
+- 📥 **File Downloads**: Download files and save them locally with proper binary handling
+- 📝 **Form Submissions**: Support for application/x-www-form-urlencoded content type
+- �🔐 **Multiple Authentication Types**:
   - API Key (with customizable header name)
   - Bearer Token
   - Basic Authentication
@@ -16,10 +19,12 @@ A powerful Model Context Protocol (MCP) server that enables AI models to interac
   - Request body (JSON or other formats)
   - Configurable timeouts
   - Custom Content-Type headers
+- 🔄 **Retry Logic**: Automatic retry with exponential backoff for failed requests (excludes 4xx errors)
 - 📊 **Rich Response Handling**:
   - Full response details (status, headers, data)
   - Comprehensive error information
-- 🧪 **Tested**: Includes test suite with JSONPlaceholder API
+  - File download progress tracking
+- 🧪 **Tested**: Includes comprehensive test suite with JSONPlaceholder API
 
 ## Installation
 
@@ -52,7 +57,7 @@ npm test
 
 ## Available Tools
 
-The server provides 5 main tools for interacting with REST APIs:
+The server provides 8 powerful tools for interacting with REST APIs:
 
 ### 1. `rest_api_get`
 
@@ -155,6 +160,72 @@ Make DELETE requests to remove resources.
   "url": "https://api.example.com/users/123",
   "authType": "bearer",
   "bearerToken": "your-token-here"
+}
+```
+
+### 6. `rest_api_upload_file`
+
+Upload files (images, documents, etc.) using multipart/form-data encoding.
+
+**Parameters:**
+- `url` (required): The full URL to upload to
+- `filePath` (required): Absolute path to the file to upload
+- `fileFieldName` (optional): Name of the file field (default: "file")
+- `formFields` (optional): Additional form fields to include
+- All authentication and header parameters from `rest_api_get`
+
+**Example:**
+```json
+{
+  "url": "https://api.example.com/upload",
+  "filePath": "C:\\Users\\Name\\Pictures\\image.jpg",
+  "fileFieldName": "photo",
+  "formFields": {
+    "description": "Profile picture",
+    "category": "avatar"
+  },
+  "authType": "bearer",
+  "bearerToken": "your-token-here"
+}
+```
+
+### 7. `rest_api_download_file`
+
+Download files from a REST API and save them locally.
+
+**Parameters:**
+- `url` (required): The full URL to download from
+- `savePath` (required): Absolute path where the file should be saved
+- All authentication and header parameters from `rest_api_get`
+
+**Example:**
+```json
+{
+  "url": "https://api.example.com/files/report.pdf",
+  "savePath": "C:\\Users\\Name\\Downloads\\report.pdf",
+  "authType": "api-key",
+  "apiKey": "your-api-key"
+}
+```
+
+### 8. `rest_api_form_urlencoded`
+
+Submit form data using application/x-www-form-urlencoded encoding.
+
+**Parameters:**
+- `url` (required): The full URL to submit to
+- `formData` (required): Form data as key-value pairs
+- All authentication and header parameters from `rest_api_get`
+
+**Example:**
+```json
+{
+  "url": "https://api.example.com/oauth/token",
+  "formData": {
+    "grant_type": "client_credentials",
+    "client_id": "your-client-id",
+    "client_secret": "your-client-secret"
+  }
 }
 ```
 

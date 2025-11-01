@@ -24,7 +24,7 @@ Run the included test suite to verify everything works:
 npm test
 ```
 
-This will test all five HTTP methods (GET, POST, PUT, PATCH, DELETE) using the JSONPlaceholder API.
+This will test all HTTP methods (GET, POST, PUT, PATCH, DELETE) and features using the JSONPlaceholder API.
 
 ## Using with Claude Desktop
 
@@ -164,6 +164,9 @@ If you encounter issues:
 | `rest_api_put` | Update resource | `url` |
 | `rest_api_patch` | Partial update | `url` |
 | `rest_api_delete` | Delete resource | `url` |
+| `rest_api_upload_file` | Upload files/images | `url`, `filePath` |
+| `rest_api_download_file` | Download files | `url`, `savePath` |
+| `rest_api_form_urlencoded` | Submit forms | `url`, `formData` |
 
 All tools support:
 - `headers` - Custom headers
@@ -171,3 +174,10 @@ All tools support:
 - `timeout` - Request timeout (ms)
 - `authType` - Authentication type
 - API key, Bearer token, or Basic auth credentials
+
+**New Features in v1.1.0:**
+- 📤 File uploads with multipart/form-data
+- 📥 File downloads with binary data support
+- 📝 Form submissions with urlencoded data
+- 🔄 Automatic retry with exponential backoff
+- 🎯 Enhanced error handling

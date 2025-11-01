@@ -334,10 +334,142 @@ Common error scenarios:
 - Invalid JSON body: Returns parsing error
 - Rate limiting: Returns 429 status
 
+## File Upload Examples
+
+### Upload an Image
+
+Upload an image file with metadata:
+
+```json
+{
+  "name": "rest_api_upload_file",
+  "arguments": {
+    "url": "https://api.example.com/upload",
+    "filePath": "C:\\Users\\Name\\Pictures\\photo.jpg",
+    "fileFieldName": "image",
+    "formFields": {
+      "title": "My Photo",
+      "description": "A beautiful sunset",
+      "tags": "nature,sunset,photography"
+    },
+    "authType": "bearer",
+    "bearerToken": "your-token-here"
+  }
+}
+```
+
+### Upload a Document
+
+```json
+{
+  "name": "rest_api_upload_file",
+  "arguments": {
+    "url": "https://api.example.com/documents",
+    "filePath": "/home/user/documents/report.pdf",
+    "fileFieldName": "file",
+    "formFields": {
+      "category": "reports",
+      "year": 2025
+    }
+  }
+}
+```
+
+## File Download Examples
+
+### Download an Image
+
+```json
+{
+  "name": "rest_api_download_file",
+  "arguments": {
+    "url": "https://example.com/images/photo.jpg",
+    "savePath": "C:\\Users\\Name\\Downloads\\photo.jpg"
+  }
+}
+```
+
+### Download a PDF with Authentication
+
+```json
+{
+  "name": "rest_api_download_file",
+  "arguments": {
+    "url": "https://api.example.com/reports/2025/summary.pdf",
+    "savePath": "/home/user/reports/summary.pdf",
+    "authType": "bearer",
+    "bearerToken": "your-token-here"
+  }
+}
+```
+
+## Form-Urlencoded Examples
+
+### OAuth Token Request
+
+```json
+{
+  "name": "rest_api_form_urlencoded",
+  "arguments": {
+    "url": "https://oauth.example.com/token",
+    "formData": {
+      "grant_type": "client_credentials",
+      "client_id": "your-client-id",
+      "client_secret": "your-client-secret",
+      "scope": "read write"
+    }
+  }
+}
+```
+
+### Traditional Form Submission
+
+```json
+{
+  "name": "rest_api_form_urlencoded",
+  "arguments": {
+    "url": "https://api.example.com/contact",
+    "formData": {
+      "name": "John Doe",
+      "email": "john@example.com",
+      "message": "Hello!",
+      "subscribe": true
+    }
+  }
+}
+```
+
+## Advanced Features
+
+### Automatic Retry with Backoff
+
+The server automatically retries failed requests (excluding 4xx client errors) up to 3 times with exponential backoff:
+- First retry: 1 second delay
+- Second retry: 2 seconds delay  
+- Third retry: 4 seconds delay
+
+### Large File Handling
+
+For large files, increase the timeout:
+
+```json
+{
+  "name": "rest_api_upload_file",
+  "arguments": {
+    "url": "https://api.example.com/upload",
+    "filePath": "C:\\Users\\Name\\large-video.mp4",
+    "timeout": 120000
+  }
+}
+```
+
 ## Tips
 
 1. **URL Encoding**: Query parameters are automatically URL-encoded
 2. **JSON Bodies**: Objects in the `body` field are automatically stringified to JSON
-3. **Timeouts**: Adjust the `timeout` parameter for slow APIs (default: 30 seconds)
+3. **Timeouts**: Adjust the `timeout` parameter for slow APIs or large files (default: 30 seconds)
 4. **Headers**: Custom headers override default headers
 5. **Content-Type**: The `contentType` parameter sets the Content-Type header for POST/PUT/PATCH requests
+6. **File Paths**: Always use absolute paths for file uploads and downloads
+7. **Retry Logic**: Automatic retries work for network/server errors but not client errors (4xx)
+8. **Binary Data**: File downloads handle binary data correctly for images, PDFs, videos, etc.
