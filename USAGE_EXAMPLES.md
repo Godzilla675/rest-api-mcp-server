@@ -439,6 +439,121 @@ Upload an image file with metadata:
 }
 ```
 
+## GraphQL Examples
+
+### Simple GraphQL Query
+
+Query public GraphQL API:
+
+```json
+{
+  "name": "rest_api_graphql",
+  "arguments": {
+    "url": "https://countries.trevorblades.com/",
+    "query": "{ countries { code name capital } }"
+  }
+}
+```
+
+### GraphQL Query with Variables
+
+```json
+{
+  "name": "rest_api_graphql",
+  "arguments": {
+    "url": "https://countries.trevorblades.com/",
+    "query": "query GetCountry($code: ID!) { country(code: $code) { name capital currency emoji } }",
+    "variables": {
+      "code": "US"
+    }
+  }
+}
+```
+
+### GitHub GraphQL API
+
+Query GitHub API with authentication:
+
+```json
+{
+  "name": "rest_api_graphql",
+  "arguments": {
+    "url": "https://api.github.com/graphql",
+    "query": "query { viewer { login name bio repositories(first: 5) { nodes { name description stargazerCount } } } }",
+    "authType": "bearer",
+    "bearerToken": "your-github-personal-access-token"
+  }
+}
+```
+
+### GraphQL Mutation
+
+Create or update data:
+
+```json
+{
+  "name": "rest_api_graphql",
+  "arguments": {
+    "url": "https://api.example.com/graphql",
+    "query": "mutation CreateUser($name: String!, $email: String!) { createUser(input: { name: $name, email: $email }) { id name email createdAt } }",
+    "variables": {
+      "name": "John Doe",
+      "email": "john@example.com"
+    },
+    "authType": "bearer",
+    "bearerToken": "your-api-token"
+  }
+}
+```
+
+### GraphQL with Multiple Operations
+
+Specify which operation to run:
+
+```json
+{
+  "name": "rest_api_graphql",
+  "arguments": {
+    "url": "https://api.example.com/graphql",
+    "query": "query GetUser($id: ID!) { user(id: $id) { name } } query GetPost($id: ID!) { post(id: $id) { title } }",
+    "variables": {
+      "id": "123"
+    },
+    "operationName": "GetUser"
+  }
+}
+```
+
+### GraphQL GET Request
+
+Some APIs support GET requests for queries (useful for caching):
+
+```json
+{
+  "name": "rest_api_graphql",
+  "arguments": {
+    "url": "https://api.example.com/graphql",
+    "query": "{ posts { id title } }",
+    "httpMethod": "GET"
+  }
+}
+```
+
+### Shopify GraphQL API
+
+```json
+{
+  "name": "rest_api_graphql",
+  "arguments": {
+    "url": "https://your-store.myshopify.com/admin/api/2024-01/graphql.json",
+    "query": "{ products(first: 10) { edges { node { id title description } } } }",
+    "authType": "api-key",
+    "apiKey": "your-shopify-access-token",
+    "apiKeyHeader": "X-Shopify-Access-Token"
+  }
+}
+```
+
 ## Advanced Features
 
 ### Automatic Retry with Backoff

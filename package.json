@@ -1,7 +1,7 @@
 {
   "name": "rest-api-mcp-server",
-  "version": "1.1.0",
-  "description": "A Model Context Protocol (MCP) server for making REST API requests with file uploads, downloads, and advanced features",
+  "version": "1.2.0",
+  "description": "A Model Context Protocol (MCP) server for REST & GraphQL APIs with file uploads, downloads, and advanced features",
   "type": "module",
   "main": "dist/index.js",
   "bin": {

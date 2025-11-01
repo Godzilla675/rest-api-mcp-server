@@ -141,11 +141,25 @@ setTimeout(() => {
               });
 
               setTimeout(() => {
-                console.log('\n' + '='.repeat(60));
-                console.log('All tests completed!');
-                console.log('='.repeat(60));
-                server.kill();
-                process.exit(0);
+                // Test 8: GraphQL request
+                sendRequest('tools/call', {
+                  name: 'rest_api_graphql',
+                  arguments: {
+                    url: 'https://countries.trevorblades.com/',
+                    query: 'query GetCountry($code: ID!) { country(code: $code) { name capital } }',
+                    variables: {
+                      code: 'US'
+                    }
+                  }
+                });
+
+                setTimeout(() => {
+                  console.log('\n' + '='.repeat(60));
+                  console.log('All tests completed!');
+                  console.log('='.repeat(60));
+                  server.kill();
+                  process.exit(0);
+                }, 2000);
               }, 2000);
             }, 2000);
           }, 2000);

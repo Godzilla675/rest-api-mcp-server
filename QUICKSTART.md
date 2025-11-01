@@ -167,6 +167,7 @@ If you encounter issues:
 | `rest_api_upload_file` | Upload files/images | `url`, `filePath` |
 | `rest_api_download_file` | Download files | `url`, `savePath` |
 | `rest_api_form_urlencoded` | Submit forms | `url`, `formData` |
+| `rest_api_graphql` | GraphQL queries/mutations | `url`, `query` |
 
 All tools support:
 - `headers` - Custom headers
@@ -175,7 +176,8 @@ All tools support:
 - `authType` - Authentication type
 - API key, Bearer token, or Basic auth credentials
 
-**New Features in v1.1.0:**
+**New Features in v1.2.0:**
+- 🧭 GraphQL queries and mutations with variables
 - 📤 File uploads with multipart/form-data
 - 📥 File downloads with binary data support
 - 📝 Form submissions with urlencoded data

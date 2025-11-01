@@ -8,6 +8,7 @@ A powerful Model Context Protocol (MCP) server that enables AI models to interac
 - � **File Uploads**: Upload images, documents, and any files using multipart/form-data
 - 📥 **File Downloads**: Download files and save them locally with proper binary handling
 - 📝 **Form Submissions**: Support for application/x-www-form-urlencoded content type
+- 🧭 **GraphQL Support**: Execute GraphQL queries and mutations with variables, operation names, and GET/POST methods
 - �🔐 **Multiple Authentication Types**:
   - API Key (with customizable header name)
   - Bearer Token
@@ -57,7 +58,7 @@ npm test
 
 ## Available Tools
 
-The server provides 8 powerful tools for interacting with REST APIs:
+The server provides 9 powerful tools for interacting with REST and GraphQL APIs:
 
 ### 1. `rest_api_get`
 
@@ -226,6 +227,53 @@ Submit form data using application/x-www-form-urlencoded encoding.
     "client_id": "your-client-id",
     "client_secret": "your-client-secret"
   }
+}
+```
+
+### 9. `rest_api_graphql`
+
+Execute GraphQL queries and mutations with full support for variables and operation names.
+
+**Parameters:**
+- `url` (required): GraphQL endpoint URL
+- `query` (required): GraphQL query or mutation string
+- `variables` (optional): Variables object for the query
+- `operationName` (optional): Operation name if document contains multiple operations
+- `httpMethod` (optional): HTTP method to use - "POST" (default) or "GET"
+- All authentication and header parameters from `rest_api_get`
+
+**Example - Simple Query:**
+```json
+{
+  "url": "https://countries.trevorblades.com/",
+  "query": "{ countries { code name } }"
+}
+```
+
+**Example - Query with Variables:**
+```json
+{
+  "url": "https://api.github.com/graphql",
+  "query": "query GetUser($login: String!) { user(login: $login) { name bio } }",
+  "variables": {
+    "login": "octocat"
+  },
+  "authType": "bearer",
+  "bearerToken": "your-github-token"
+}
+```
+
+**Example - Mutation:**
+```json
+{
+  "url": "https://api.example.com/graphql",
+  "query": "mutation CreatePost($title: String!, $content: String!) { createPost(title: $title, content: $content) { id title } }",
+  "variables": {
+    "title": "New Post",
+    "content": "Post content here"
+  },
+  "authType": "bearer",
+  "bearerToken": "your-token"
 }
 ```
 

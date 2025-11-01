@@ -65,6 +65,13 @@ const FormUrlencodedSchema = BaseRequestSchema.extend({
   formData: z.record(z.union([z.string(), z.number(), z.boolean()])).describe("Form data as key-value pairs"),
 });
 
+const GraphQLRequestSchema = BaseRequestSchema.extend({
+  query: z.string().describe("GraphQL query or mutation string"),
+  variables: z.record(z.unknown()).optional().describe("GraphQL variables as an object"),
+  operationName: z.string().optional().describe("Operation name if the document contains multiple operations"),
+  httpMethod: z.enum(["POST", "GET"]).optional().default("POST").describe("HTTP method to use for the GraphQL request (default: POST)"),
+});
+
 // Helper function to build request config with authentication
 function buildRequestConfig(
   method: Method,
@@ -253,7 +260,7 @@ async function downloadFile(params: z.infer<typeof FileDownloadSchema>): Promise
 const server = new Server(
   {
     name: "rest-api-mcp-server",
-    version: "1.1.0",
+    version: "1.2.0",
   },
   {
     capabilities: {
@@ -762,6 +769,81 @@ const tools: Tool[] = [
       required: ["url", "formData"],
     },
   },
+  {
+    name: "rest_api_graphql",
+    description: "Execute GraphQL queries or mutations. IMPORTANT: Before using this tool, read the API documentation to understand the schema, required variables, authentication, and query cost limits. Supports POST (default) or GET methods, variables, and custom headers.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        url: {
+          type: "string",
+          description: "GraphQL endpoint URL",
+        },
+        query: {
+          type: "string",
+          description: "GraphQL query or mutation string",
+        },
+        variables: {
+          type: "object",
+          description: "GraphQL variables object",
+          additionalProperties: true,
+        },
+        operationName: {
+          type: "string",
+          description: "Operation name if the document contains multiple operations",
+        },
+        httpMethod: {
+          type: "string",
+          enum: ["POST", "GET"],
+          description: "HTTP method to use (default: POST)",
+          default: "POST",
+        },
+        headers: {
+          type: "object",
+          description: "Custom headers to include in the request",
+          additionalProperties: { type: "string" },
+        },
+        queryParams: {
+          type: "object",
+          description: "Additional query parameters to append to the URL",
+          additionalProperties: { type: ["string", "number", "boolean"] },
+        },
+        timeout: {
+          type: "number",
+          description: "Request timeout in milliseconds (default: 30000)",
+          default: 30000,
+        },
+        authType: {
+          type: "string",
+          enum: ["none", "api-key", "bearer", "basic"],
+          description: "Type of authentication to use",
+          default: "none",
+        },
+        apiKey: {
+          type: "string",
+          description: "API key (for api-key auth type)",
+        },
+        apiKeyHeader: {
+          type: "string",
+          description: "Header name for API key (default: X-API-Key)",
+          default: "X-API-Key",
+        },
+        bearerToken: {
+          type: "string",
+          description: "Bearer token (for bearer auth type)",
+        },
+        username: {
+          type: "string",
+          description: "Username (for basic auth type)",
+        },
+        password: {
+          type: "string",
+          description: "Password (for basic auth type)",
+        },
+      },
+      required: ["url", "query"],
+    },
+  },
 ];
 
 // List tools handler
@@ -911,6 +993,75 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             }
             break;
         }
+
+        const response = await retryRequest(() => axios(config));
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(formatResponse(response), null, 2),
+            },
+          ],
+        };
+      }
+
+      case "rest_api_graphql": {
+        const params = GraphQLRequestSchema.parse(args);
+        const {
+          queryParams,
+          query,
+          variables,
+          operationName,
+          httpMethod,
+          ...rest
+        } = params;
+
+        const method = (httpMethod || "POST").toUpperCase();
+
+        if (method === "GET") {
+          const combinedQueryParams: Record<string, any> = {
+            ...(queryParams || {}),
+            query,
+          };
+
+          if (variables && Object.keys(variables).length > 0) {
+            combinedQueryParams.variables = JSON.stringify(variables);
+          }
+
+          if (operationName) {
+            combinedQueryParams.operationName = operationName;
+          }
+
+          const config = buildRequestConfig("GET", {
+            ...rest,
+            queryParams: combinedQueryParams,
+          });
+
+          const response = await retryRequest(() => axios(config));
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(formatResponse(response), null, 2),
+              },
+            ],
+          };
+        }
+
+        const payload: Record<string, any> = { query };
+        if (variables !== undefined) {
+          payload.variables = variables;
+        }
+        if (operationName) {
+          payload.operationName = operationName;
+        }
+
+        const config = buildRequestConfig("POST", {
+          ...rest,
+          queryParams,
+          body: payload,
+          contentType: "application/json",
+        });
 
         const response = await retryRequest(() => axios(config));
         return {
