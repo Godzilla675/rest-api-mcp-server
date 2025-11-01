@@ -83,18 +83,20 @@ setTimeout(() => {
     setTimeout(() => {
       // Test 3: GET request to JSONPlaceholder (no auth required)
       sendRequest('tools/call', {
-        name: 'rest_api_get',
+        name: 'rest_api_request',
         arguments: {
-          url: 'https://jsonplaceholder.typicode.com/posts/1'
+          url: 'https://jsonplaceholder.typicode.com/posts/1',
+          method: 'GET'
         }
       });
 
       setTimeout(() => {
         // Test 4: GET request with query parameters
         sendRequest('tools/call', {
-          name: 'rest_api_get',
+          name: 'rest_api_request',
           arguments: {
             url: 'https://jsonplaceholder.typicode.com/posts',
+            method: 'GET',
             queryParams: {
               userId: 1,
               _limit: 3
@@ -105,9 +107,10 @@ setTimeout(() => {
         setTimeout(() => {
           // Test 5: POST request
           sendRequest('tools/call', {
-            name: 'rest_api_post',
+            name: 'rest_api_request',
             arguments: {
               url: 'https://jsonplaceholder.typicode.com/posts',
+              method: 'POST',
               body: {
                 title: 'Test Post',
                 body: 'This is a test post',
@@ -119,9 +122,10 @@ setTimeout(() => {
           setTimeout(() => {
             // Test 6: PUT request
             sendRequest('tools/call', {
-              name: 'rest_api_put',
+              name: 'rest_api_request',
               arguments: {
                 url: 'https://jsonplaceholder.typicode.com/posts/1',
+                method: 'PUT',
                 body: {
                   id: 1,
                   title: 'Updated Post',
@@ -134,9 +138,10 @@ setTimeout(() => {
             setTimeout(() => {
               // Test 7: DELETE request
               sendRequest('tools/call', {
-                name: 'rest_api_delete',
+                name: 'rest_api_request',
                 arguments: {
-                  url: 'https://jsonplaceholder.typicode.com/posts/1'
+                  url: 'https://jsonplaceholder.typicode.com/posts/1',
+                  method: 'DELETE'
                 }
               });
 

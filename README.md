@@ -1,395 +1,42 @@
-# REST API MCP Server
+﻿# REST API MCP Server
 
-A powerful Model Context Protocol (MCP) server that enables AI models to interact with any REST API. This server provides comprehensive support for all HTTP methods (GET, POST, PUT, PATCH, DELETE) with multiple authentication methods, custom headers, and query parameters.
+**Universal MCP server for REST & GraphQL APIs** - Just 2 simple tools handle everything: all HTTP methods, file uploads/downloads, and auto-detection of content types.
+
+## Why This Server?
+
+**Before (v1.2):** 9 confusing tools - `rest_api_get`, `rest_api_post`, `rest_api_put`, `rest_api_patch`, `rest_api_delete`, `rest_api_upload_file`, `rest_api_download_file`, `rest_api_form_urlencoded`, `rest_api_graphql`
+
+**Now (v1.3):** Just 2 smart tools:
+- `rest_api_request` - Handles ALL REST API operations
+- `rest_api_graphql` - Handles GraphQL queries/mutations
+
+No more confusion about which tool to use!
 
 ## Features
 
-- ✅ **All HTTP Methods**: Support for GET, POST, PUT, PATCH, and DELETE requests
-- � **File Uploads**: Upload images, documents, and any files using multipart/form-data
-- 📥 **File Downloads**: Download files and save them locally with proper binary handling
-- 📝 **Form Submissions**: Support for application/x-www-form-urlencoded content type
-- 🧭 **GraphQL Support**: Execute GraphQL queries and mutations with variables, operation names, and GET/POST methods
-- �🔐 **Multiple Authentication Types**:
-  - API Key (with customizable header name)
-  - Bearer Token
-  - Basic Authentication
-  - No authentication (for public APIs)
-- 🎯 **Flexible Request Configuration**:
-  - Custom headers
-  - Query parameters
-  - Request body (JSON or other formats)
-  - Configurable timeouts
-  - Custom Content-Type headers
-- 🔄 **Retry Logic**: Automatic retry with exponential backoff for failed requests (excludes 4xx errors)
-- 📊 **Rich Response Handling**:
-  - Full response details (status, headers, data)
-  - Comprehensive error information
-  - File download progress tracking
-- 🧪 **Tested**: Includes comprehensive test suite with JSONPlaceholder API
+-  **Universal Tool**: One tool for all HTTP methods (GET, POST, PUT, PATCH, DELETE)
+-  **Smart Auto-Detection**: Automatically detects JSON, form-urlencoded, or multipart file uploads
+-  **File Uploads**: Upload images, documents via multipart/form-data
+-  **File Downloads**: Auto-saves binary responses (images, PDFs, etc.)
+-  **All Auth Types**: API Key, Bearer Token, Basic Auth
+-  **Retry Logic**: Automatic exponential backoff for network errors
+-  **GraphQL**: Full support for queries, mutations, variables
+-  **Fixed Hugging Face**: Now works with image generation APIs (Accept: */*)
 
 ## Installation
 
 ```bash
-npm install
-npm run build
-```
-
-## Usage
-
-### Running the Server
-
-```bash
-npm start
-```
-
-Or for development:
-
-```bash
-npm run dev
-```
-
-### Testing the Server
-
-Run the included test suite that demonstrates all features:
-
-```bash
-npm test
-```
-
-## Available Tools
-
-The server provides 9 powerful tools for interacting with REST and GraphQL APIs:
-
-### 1. `rest_api_get`
-
-Make GET requests to retrieve data from any REST API.
-
-**Parameters:**
-- `url` (required): The full URL to request
-- `headers` (optional): Custom headers object
-- `queryParams` (optional): Query parameters object
-- `timeout` (optional): Request timeout in milliseconds (default: 30000)
-- `authType` (optional): Authentication type - "none", "api-key", "bearer", or "basic" (default: "none")
-- `apiKey` (optional): API key for api-key authentication
-- `apiKeyHeader` (optional): Header name for API key (default: "X-API-Key")
-- `bearerToken` (optional): Token for bearer authentication
-- `username` (optional): Username for basic authentication
-- `password` (optional): Password for basic authentication
-
-**Example:**
-```json
-{
-  "url": "https://api.example.com/users",
-  "queryParams": {
-    "page": 1,
-    "limit": 10
-  },
-  "authType": "bearer",
-  "bearerToken": "your-token-here"
-}
-```
-
-### 2. `rest_api_post`
-
-Make POST requests to create new resources.
-
-**Parameters:**
-- All parameters from `rest_api_get`
-- `body` (optional): Request body (will be JSON stringified if object)
-- `contentType` (optional): Content-Type header (default: "application/json")
-
-**Example:**
-```json
-{
-  "url": "https://api.example.com/users",
-  "body": {
-    "name": "John Doe",
-    "email": "john@example.com"
-  },
-  "authType": "api-key",
-  "apiKey": "your-api-key",
-  "apiKeyHeader": "X-API-Key"
-}
-```
-
-### 3. `rest_api_put`
-
-Make PUT requests to update existing resources completely.
-
-**Parameters:** Same as `rest_api_post`
-
-**Example:**
-```json
-{
-  "url": "https://api.example.com/users/123",
-  "body": {
-    "name": "John Doe Updated",
-    "email": "john.updated@example.com"
-  },
-  "authType": "bearer",
-  "bearerToken": "your-token-here"
-}
-```
-
-### 4. `rest_api_patch`
-
-Make PATCH requests to partially update resources.
-
-**Parameters:** Same as `rest_api_post`
-
-**Example:**
-```json
-{
-  "url": "https://api.example.com/users/123",
-  "body": {
-    "email": "newemail@example.com"
-  }
-}
-```
-
-### 5. `rest_api_delete`
-
-Make DELETE requests to remove resources.
-
-**Parameters:**
-- All parameters from `rest_api_get`
-- `body` (optional): Optional request body
-
-**Example:**
-```json
-{
-  "url": "https://api.example.com/users/123",
-  "authType": "bearer",
-  "bearerToken": "your-token-here"
-}
-```
-
-### 6. `rest_api_upload_file`
-
-Upload files (images, documents, etc.) using multipart/form-data encoding.
-
-**Parameters:**
-- `url` (required): The full URL to upload to
-- `filePath` (required): Absolute path to the file to upload
-- `fileFieldName` (optional): Name of the file field (default: "file")
-- `formFields` (optional): Additional form fields to include
-- All authentication and header parameters from `rest_api_get`
-
-**Example:**
-```json
-{
-  "url": "https://api.example.com/upload",
-  "filePath": "C:\\Users\\Name\\Pictures\\image.jpg",
-  "fileFieldName": "photo",
-  "formFields": {
-    "description": "Profile picture",
-    "category": "avatar"
-  },
-  "authType": "bearer",
-  "bearerToken": "your-token-here"
-}
-```
-
-### 7. `rest_api_download_file`
-
-Download files from a REST API and save them locally.
-
-**Parameters:**
-- `url` (required): The full URL to download from
-- `savePath` (required): Absolute path where the file should be saved
-- All authentication and header parameters from `rest_api_get`
-
-**Example:**
-```json
-{
-  "url": "https://api.example.com/files/report.pdf",
-  "savePath": "C:\\Users\\Name\\Downloads\\report.pdf",
-  "authType": "api-key",
-  "apiKey": "your-api-key"
-}
-```
-
-### 8. `rest_api_form_urlencoded`
-
-Submit form data using application/x-www-form-urlencoded encoding.
-
-**Parameters:**
-- `url` (required): The full URL to submit to
-- `formData` (required): Form data as key-value pairs
-- All authentication and header parameters from `rest_api_get`
-
-**Example:**
-```json
-{
-  "url": "https://api.example.com/oauth/token",
-  "formData": {
-    "grant_type": "client_credentials",
-    "client_id": "your-client-id",
-    "client_secret": "your-client-secret"
-  }
-}
-```
-
-### 9. `rest_api_graphql`
-
-Execute GraphQL queries and mutations with full support for variables and operation names.
-
-**Parameters:**
-- `url` (required): GraphQL endpoint URL
-- `query` (required): GraphQL query or mutation string
-- `variables` (optional): Variables object for the query
-- `operationName` (optional): Operation name if document contains multiple operations
-- `httpMethod` (optional): HTTP method to use - "POST" (default) or "GET"
-- All authentication and header parameters from `rest_api_get`
-
-**Example - Simple Query:**
-```json
-{
-  "url": "https://countries.trevorblades.com/",
-  "query": "{ countries { code name } }"
-}
-```
-
-**Example - Query with Variables:**
-```json
-{
-  "url": "https://api.github.com/graphql",
-  "query": "query GetUser($login: String!) { user(login: $login) { name bio } }",
-  "variables": {
-    "login": "octocat"
-  },
-  "authType": "bearer",
-  "bearerToken": "your-github-token"
-}
-```
-
-**Example - Mutation:**
-```json
-{
-  "url": "https://api.example.com/graphql",
-  "query": "mutation CreatePost($title: String!, $content: String!) { createPost(title: $title, content: $content) { id title } }",
-  "variables": {
-    "title": "New Post",
-    "content": "Post content here"
-  },
-  "authType": "bearer",
-  "bearerToken": "your-token"
-}
-```
-
-## Authentication Examples
-
-### API Key Authentication
-
-```json
-{
-  "url": "https://api.example.com/data",
-  "authType": "api-key",
-  "apiKey": "your-api-key-here",
-  "apiKeyHeader": "X-API-Key"
-}
-```
-
-### Bearer Token Authentication
-
-```json
-{
-  "url": "https://api.example.com/data",
-  "authType": "bearer",
-  "bearerToken": "your-bearer-token-here"
-}
-```
-
-### Basic Authentication
-
-```json
-{
-  "url": "https://api.example.com/data",
-  "authType": "basic",
-  "username": "your-username",
-  "password": "your-password"
-}
-```
-
-### No Authentication (Public APIs)
-
-```json
-{
-  "url": "https://api.publicapi.com/data",
-  "authType": "none"
-}
-```
-
-## Response Format
-
-All successful requests return a response in the following format:
-
-```json
-{
-  "status": 200,
-  "statusText": "OK",
-  "headers": {
-    "content-type": "application/json",
-    ...
-  },
-  "data": {
-    ... API response data ...
-  }
-}
-```
-
-Error responses include:
-
-```json
-{
-  "error": true,
-  "message": "Error message",
-  "status": 404,
-  "statusText": "Not Found",
-  "data": {
-    ... error details if available ...
-  }
-}
-```
-
-## Configuration with MCP Clients
-
-To use this server with an MCP client like Claude Desktop, add it to your configuration:
-
-### Claude Desktop Configuration
-
-On MacOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-
-On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
-
-**Option 1: Using local installation**
-```json
-{
-  "mcpServers": {
-    "rest-api": {
-      "command": "node",
-      "args": ["/path/to/rest-api-mcp-server/dist/index.js"]
-    }
-  }
-}
-```
-
-**Option 2: Using npx (recommended after npm publish)**
-```json
-{
-  "mcpServers": {
-    "rest-api": {
-      "command": "npx",
-      "args": ["-y", "rest-api-mcp-server"]
-    }
-  }
-}
-```
-
-**Option 3: Using global installation**
-```bash
 npm install -g rest-api-mcp-server
 ```
+
+Or locally:
+```bash
+npm install rest-api-mcp-server
+```
+
+## Configuration
+
+Add to your MCP settings (e.g., Claude Desktop config):
 
 ```json
 {
@@ -401,88 +48,150 @@ npm install -g rest-api-mcp-server
 }
 ```
 
-## Examples
+## The 2 Tools
 
-### Example 1: Fetch Data from Public API
+### 1. `rest_api_request` - Universal REST API Tool
 
+Handles **everything**: GET, POST, PUT, PATCH, DELETE, file uploads, file downloads, form submissions.
+
+**Key Parameters:**
+- `url` (required): Full URL
+- `method` (optional): GET, POST, PUT, PATCH, DELETE (default: GET)
+- `body` (optional): Request body (auto-detects JSON/form/multipart)
+- `saveResponseTo` (optional): File path to save binary response
+- `contentType` (optional): Override auto-detection
+- `headers`, `queryParams`, `timeout`: Standard options
+- Auth: `authType`, `bearerToken`, `apiKey`, `username`, `password`
+
+**Examples:**
+
+**Simple GET:**
 ```json
 {
-  "name": "rest_api_get",
-  "arguments": {
-    "url": "https://jsonplaceholder.typicode.com/posts/1"
-  }
+  "url": "https://api.example.com/users",
+  "method": "GET"
 }
 ```
 
-### Example 2: Create Resource with Authentication
-
+**POST JSON:**
 ```json
 {
-  "name": "rest_api_post",
-  "arguments": {
-    "url": "https://api.example.com/posts",
-    "body": {
-      "title": "New Post",
-      "content": "Post content here"
-    },
-    "authType": "bearer",
-    "bearerToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-  }
+  "url": "https://api.example.com/users",
+  "method": "POST",
+  "body": {
+    "name": "John Doe",
+    "email": "john@example.com"
+  },
+  "bearerToken": "your-token"
 }
 ```
 
-### Example 3: Query with Parameters
-
+**Upload File:**
 ```json
 {
-  "name": "rest_api_get",
-  "arguments": {
-    "url": "https://api.example.com/search",
-    "queryParams": {
-      "q": "search term",
-      "page": 1,
-      "limit": 20
-    },
-    "headers": {
-      "Accept": "application/json"
-    }
-  }
+  "url": "https://api.example.com/upload",
+  "method": "POST",
+  "body": {
+    "files": [
+      {
+        "path": "C:\\Users\\Name\\image.jpg",
+        "fieldName": "file",
+        "mimeType": "image/jpeg"
+      }
+    ]
+  },
+  "bearerToken": "your-token"
 }
 ```
 
-## Development
+**Download Image (e.g., Hugging Face):**
+```json
+{
+  "url": "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-dev",
+  "method": "POST",
+  "body": {
+    "inputs": "A cat in a sunbeam"
+  },
+  "saveResponseTo": "C:\\Users\\Name\\generated_cat.png",
+  "bearerToken": "hf_xxxxx",
+  "timeout": 60000
+}
+```
 
-### Build
+**Form Submission (OAuth):**
+```json
+{
+  "url": "https://oauth.example.com/token",
+  "method": "POST",
+  "body": {
+    "grant_type": "client_credentials",
+    "client_id": "xxx",
+    "client_secret": "yyy"
+  },
+  "contentType": "application/x-www-form-urlencoded"
+}
+```
+
+### 2. `rest_api_graphql` - GraphQL Tool
+
+Execute GraphQL queries and mutations.
+
+**Key Parameters:**
+- `url` (required): GraphQL endpoint
+- `query` (required): GraphQL query/mutation string
+- `variables` (optional): Variables object
+- `operationName` (optional): Operation name
+- `httpMethod` (optional): GET or POST (default: POST)
+- Auth: Same as rest_api_request
+
+**Example:**
+```json
+{
+  "url": "https://api.example.com/graphql",
+  "query": "query GetUser($id: ID!) { user(id: $id) { name email } }",
+  "variables": {
+    "id": "123"
+  },
+  "bearerToken": "your-token"
+}
+```
+
+## What Changed in v1.3?
+
+### Consolidation
+-  Removed: `rest_api_get`, `rest_api_post`, `rest_api_put`, `rest_api_patch`, `rest_api_delete`
+-  Removed: `rest_api_upload_file`, `rest_api_download_file`, `rest_api_form_urlencoded`
+-  Added: Single `rest_api_request` that does it all
+
+### Fixes
+-  Fixed `Accept: */*` header (now works with Hugging Face image generation)
+-  Auto-detects content type from body structure
+-  Auto-saves binary responses when `saveResponseTo` provided
+
+### For AI Models
+Much clearer! No more confusion about:
+- When to use `rest_api_get` vs `rest_api_download_file`
+- When to use `rest_api_post` vs `rest_api_upload_file` vs `rest_api_form_urlencoded`
+
+Now: Just use `rest_api_request` with the appropriate parameters!
+
+## Testing
 
 ```bash
-npm run build
+npm test
 ```
 
-### Run in Development Mode
+## Example Use Cases
 
-```bash
-npm run dev
-```
-
-### Project Structure
-
-```
-rest-api-mcp-server/
-├── src/
-│   └── index.ts        # Main server implementation
-├── dist/               # Compiled JavaScript output
-├── test/
-│   └── test-server.js  # Test suite
-├── package.json
-├── tsconfig.json
-└── README.md
-```
-
-## Dependencies
-
-- `@modelcontextprotocol/sdk`: MCP protocol implementation
-- `axios`: HTTP client for making API requests
-- `zod`: Schema validation
+1. **Fetch API data**: Simple GET with auth
+2. **Create resources**: POST with JSON body
+3. **Update resources**: PUT/PATCH with JSON
+4. **Delete resources**: DELETE with auth
+5. **Upload files**: POST with multipart (auto-detected)
+6. **Download files**: Any method + `saveResponseTo`
+7. **OAuth tokens**: POST form-urlencoded (auto-detected)
+8. **GraphQL APIs**: Queries and mutations with variables
+9. **AI Image Generation**: Hugging Face, Replicate, etc.
 
 ## License
 
@@ -490,4 +199,11 @@ MIT
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Issues and PRs welcome at [GitHub](https://github.com/Godzilla675/rest-api-mcp-server)
+
+## Version History
+
+- **v1.3.0**: Consolidated 9 tools into 2; Fixed Accept header; Auto-detection
+- **v1.2.0**: Added GraphQL support
+- **v1.1.0**: Added file upload/download, form-urlencoded, retry logic
+- **v1.0.0**: Initial release with basic REST methods

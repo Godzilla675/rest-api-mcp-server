@@ -1,7 +1,7 @@
 {
   "name": "rest-api-mcp-server",
-  "version": "1.2.0",
-  "description": "A Model Context Protocol (MCP) server for REST & GraphQL APIs with file uploads, downloads, and advanced features",
+  "version": "1.3.0",
+  "description": "Universal MCP server for REST & GraphQL APIs - 2 simple tools handle all HTTP methods, file uploads/downloads, and auto-detect content types",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
