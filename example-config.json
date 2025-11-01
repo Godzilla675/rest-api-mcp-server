@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "rest-api": {
+      "command": "node",
+      "args": [
+        "/absolute/path/to/rest-api-mcp-server/dist/index.js"
+      ]
+    }
+  }
+}
